@@ -1,10 +1,11 @@
 const neo4j = require('neo4j-driver');
+require('dotenv').config();
 
 class LicitacaoService {
     constructor() {
         this.driver = neo4j.driver(
-            ' bolt://localhost',
-            neo4j.auth.basic('neo4j', 'tcctcc')
+            process.env.URL,
+            neo4j.auth.basic(process.env.USER, process.env.PWD)
         );
     }
 
