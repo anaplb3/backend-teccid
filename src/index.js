@@ -1,17 +1,31 @@
 const { ApolloServer } = require('apollo-server');
-const typeDefs = require("./schema");
-const resolvers = require('./resolvers');
+const { makeAugmentedSchema, inferSchema } = require('neo4j-graphql-js');
+const neo4j = require('neo4j-driver');
+require('dotenv').config();
 
-const LicitacaoService = require('./service/licitacaoService');
+const driver = neo4j.driver(
+    process.env.URL,
+    neo4j.auth.basic(process.env.USER, process.env.PWD)
+);
 
-const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    dataSources: () => ({
-        licitacaoService: new LicitacaoService()
+const inferAugmentedSchema = driver => {
+    return inferSchema(driver).then(result => {
+        return makeAugmentedSchema({
+            typeDefs: result.typeDefs
+        });
     })
-});
+}
 
-server.listen().then(({ url }) => {
-    console.log(`server ready at ${url}`)
-});
+const createServer = schema =>
+    new ApolloServer({
+        schema,
+        context: { driver }
+    });
+
+inferAugmentedSchema(driver)
+    .then(createServer)
+    .then(server => server.listen())
+    .then(({ url }) => {
+        console.log(`server ready at ${url}`);
+    })
+    .catch(err => console.error(err));

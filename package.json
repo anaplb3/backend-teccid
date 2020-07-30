@@ -4,18 +4,14 @@
     "description": "API do projeto Tecnologia Cidadã agora em Graphql",
     "main": "index.js",
     "scripts": {
-        "test": "jest",
         "start": "node src/index.js"
     },
     "author": "anaplb3",
     "license": "ISC",
     "dependencies": {
-        "@babel/preset-env": "^7.10.4",
         "apollo-server": "^2.16.0",
         "dotenv": "^8.2.0",
-        "graphql": "^15.3.0",
-        "jest": "^26.1.0",
         "neo4j-driver": "^4.1.1",
-        "neo4j-graphql-js": "^2.14.4"
+        "neo4j-graphql-js": "^2.15.0"
     }
 }
